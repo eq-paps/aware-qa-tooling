@@ -1,0 +1,35 @@
+import { test, expect } from '@playwright/test';
+
+test('add-and-remove-camera', async ({ page }) => {
+  await page.goto('http://localhost:3000/app/login');
+  await page.locator('#input-v-0-0').click();
+  await page.locator('#input-v-0-0').fill('aware@equature.com');
+  await page.locator('#input-v-0-2').click();
+  await page.locator('#input-v-0-2').fill('123456789');
+  await page.getByRole('button', { name: 'Sign In' }).click();
+  await page.goto('http://localhost:3000/app/system-configuration');
+  await page.getByRole('tab', { name: 'Cameras' }).click();
+  await page.getByRole('button', { name: 'Add Camera' }).click();
+  await page.locator('#input-v-1-0-54').click();
+  await page.locator('#input-v-1-0-54').fill('Test Camera Playwright 1');
+  await page.locator('#input-v-1-0-58').click();
+  await page.locator('#input-v-1-0-58').fill('admin');
+  await page.locator('#input-v-1-0-58').press('Tab');
+  await page.getByRole('textbox', { name: '*********' }).fill('a');
+  await page.locator('#input-v-1-0-66').click();
+  await page.locator('#input-v-1-0-66').fill('192.168.7.255');
+  await page.getByRole('textbox', { name: 'rtsp://<ip-address>:<port>/<' }).click();
+  await page.getByRole('textbox', { name: 'rtsp://<ip-address>:<port>/<' }).fill('rtsp://localhost:8554/rtsp-test_stream5');
+  await page.getByRole('textbox', { name: 'http://<ip-address>/<url>/<' }).click();
+  await page.getByRole('textbox', { name: 'http://<ip-address>/<url>/<' }).fill('http://localhost:3456/api/files/snapshot/CityBusline.mp4');
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await page.getByRole('tab', { name: 'Plugins' }).click();
+  await page.locator('.v-sheet.v-theme--VuetifyTheme.bg-transparent.d-flex.ml-5').click();
+  await page.locator('.v-sheet.v-theme--VuetifyTheme.bg-transparent.d-flex.ml-5').click();
+  await page.locator('.v-field.v-field--appended.v-field--center-affix.v-field--has-background > .v-field__field > .v-field__input').click();
+  await page.getByText('QA').click();
+  await page.getByRole('tab', { name: 'Cameras' }).click();
+  await page.locator('div').filter({ hasText: /^Test Camera Playwright 1unassigned$/ }).nth(3).click();
+  await page.getByRole('button', { name: 'Delete' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Delete' }).click();
+});
