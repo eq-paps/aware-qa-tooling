@@ -109,15 +109,12 @@ app.post("/api/add-cameras", (req, res) => {
   }
 
   const jobId = crypto.randomUUID();
-  const child = runJob(
+  runJob(
     jobId,
     "add-cameras",
     "python3",
-    [path.join(__dirname, "add_cameras.py")],
-    { stdio: ["pipe", "inherit", "inherit"] }
+    [path.join(__dirname, "add_cameras.py"), String(count)]
   );
-  child.stdin.write(`${count}\n`);
-  child.stdin.end();
 
   res.json({ jobId });
 });
@@ -130,15 +127,12 @@ app.post("/api/remove-cameras", (req, res) => {
   }
 
   const jobId = crypto.randomUUID();
-  const child = runJob(
+  runJob(
     jobId,
     "remove-cameras",
     "python3",
-    [path.join(__dirname, "remove_cameras.py")],
-    { stdio: ["pipe", "inherit", "inherit"] }
+    [path.join(__dirname, "remove_cameras.py"), "--yes"]
   );
-  child.stdin.write("y\n");
-  child.stdin.end();
 
   res.json({ jobId });
 });

@@ -5,8 +5,10 @@ Each camera gets a unique LT-prefixed name and a sequential RTSP URL.
 The stream counter is persisted so subsequent runs pick up where the last left off.
 """
 
+import argparse
 import json
 import os
+import sys
 import urllib.error
 import urllib.request
 import uuid
@@ -71,11 +73,15 @@ def create_camera(name: str, ip: str, port: int, stream_num: int) -> dict:
         headers={"Content-Type": "application/json"},
         method="POST",
     )
-    with urllib.request.urlopen(req) as resp:
+    with urllib.request.urlopen(req, timeout=30) as resp:
         return json.loads(resp.read())
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Bulk-add cameras to Equature Aware")
+    parser.add_argument("count", nargs="?", type=int, help="Number of cameras to add")
+    args = parser.parse_args()
+
     env = load_env()
     ip = env.get("rtsp_ip", "192.168.5.93")
     port = int(env.get("rtsp_port", "8554"))
@@ -85,19 +91,23 @@ def main():
     print("Each camera gets an LT-prefixed name and a sequential test-stream URL.")
     print()
 
-    while True:
-        try:
-            count = int(input("How many cameras would you like to add? "))
-            if count <= 0:
-                print("Please enter a positive number.")
-                continue
-            break
-        except ValueError:
-            print("Invalid input. Please enter a whole number.")
+    count = args.count
+    if count is None:
+        while True:
+            try:
+                count = int(input("How many cameras would you like to add? "))
+                if count <= 0:
+                    print("Please enter a positive number.")
+                    continue
+                break
+            except ValueError:
+                print("Invalid input. Please enter a whole number.")
 
     stream_num = read_counter()
     print(f"\nStarting stream number: {stream_num}")
+    sys.stdout.flush()
     print(f"Adding {count} camera(s)...\n")
+    sys.stdout.flush()
 
     success, failed = 0, []
 
@@ -109,13 +119,16 @@ def main():
             print(
                 f"  Created {cam['name']}  (id: {cam['camera_id']})  →  test-stream-{current_stream}"
             )
+            sys.stdout.flush()
             success += 1
         except urllib.error.HTTPError as e:
             body = e.read().decode()
             print(f"  Failed camera creation: HTTP {e.code} - {body[:120]}")
+            sys.stdout.flush()
             failed.append(body[:120])
         except Exception as e:
             print(f"  Failed camera creation: {e}")
+            sys.stdout.flush()
             failed.append(str(e))
 
     if success > 0:
