@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Equature Aware - QA Test Suite</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <h1>Equature Aware</h1>
+      <span class="subtitle">QA Test Suite</span>
+    </div>
+    <div class="header-status">
+      <span id="status-dot" class="status-dot idle"></span>
+      <span id="status-text">Idle</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="panel-container">
+      <section class="panel panel-tests">
+        <h2>Playwright Tests</h2>
+        <div class="panel-body">
+          <h3>Test Files</h3>
+          <div id="test-list" class="test-list">
+            <p class="loading">Loading tests...</p>
+          </div>
+
+          <h3>Browser</h3>
+          <select id="browser-select" class="input-select">
+            <option value="chromium">Chromium</option>
+            <option value="firefox">Firefox</option>
+            <option value="webkit">WebKit</option>
+          </select>
+
+          <button id="run-tests-btn" class="btn btn-primary" disabled>
+            Run Selected Tests
+          </button>
+        </div>
+      </section>
+
+      <section class="panel panel-cameras">
+        <h2>Camera Tools</h2>
+        <div class="panel-body">
+          <div class="tool-card">
+            <h3>Add Cameras</h3>
+            <p class="tool-desc">Bulk-add LT-prefixed cameras with random RTSP streams.</p>
+            <div class="tool-controls">
+              <label for="camera-count">Number of cameras:</label>
+              <input
+                type="number"
+                id="camera-count"
+                class="input-number"
+                value="1"
+                min="1"
+                max="100"
+              />
+            </div>
+            <button id="add-cameras-btn" class="btn btn-success">
+              Add Cameras
+            </button>
+          </div>
+
+          <div class="tool-card">
+            <h3>Remove Cameras</h3>
+            <p class="tool-desc">Remove all <code>so_lt_</code>-prefixed cameras from the system.</p>
+            <button id="remove-cameras-btn" class="btn btn-danger">
+              Remove Cameras
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="panel panel-output">
+      <div class="panel-header">
+        <h2>Output</h2>
+        <div class="output-actions">
+          <button id="clear-output-btn" class="btn btn-small">Clear</button>
+        </div>
+      </div>
+      <div id="output" class="output-area">
+        <div class="output-placeholder">Output will appear here...</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

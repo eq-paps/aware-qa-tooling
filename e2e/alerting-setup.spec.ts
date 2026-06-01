@@ -18,6 +18,7 @@ test('add-triage-member', async ({ page }) => {
     const triageTab = page.getByRole('tab', {name: 'Alerts'});
     await triageTab.click();
     await expect(page).toHaveURL('http://localhost:3000/app/system-configuration?tab=alerts');
+    
 
     // this function is incomplete.
 }
