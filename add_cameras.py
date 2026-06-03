@@ -62,7 +62,7 @@ def create_camera(name: str, ip: str, port: int, stream_num: int) -> dict:
             "username": "a",
             "password": "1",
             "rtspUrl": rtsp_url,
-            "snapshotUrl": "https://placeholder",
+            "snapshotUrl": "http://localhost:3456/api/files/snapshot/CityBusline.mp4",
             "ipAddress": ip,
         }
     ).encode()
