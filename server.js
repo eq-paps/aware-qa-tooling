@@ -7,6 +7,12 @@ const crypto = require("crypto");
 const app = express();
 const PORT = process.env.PORT || 3457;
 
+// Reset the camera stream counter on server start
+const counterFile = path.join(__dirname, ".camera_counter");
+if (fs.existsSync(counterFile)) {
+  fs.unlinkSync(counterFile);
+}
+
 app.use(express.json());
 app.use(express.static("public"));
 
