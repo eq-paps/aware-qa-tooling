@@ -147,6 +147,22 @@ app.get("/api/job-status", (req, res) => {
   res.json({ running: !!currentJob, job: currentJob });
 });
 
+app.get("/api/counter", (req, res) => {
+  const val = fs.existsSync(counterFile)
+    ? parseInt(fs.readFileSync(counterFile, "utf8").trim(), 10)
+    : 1;
+  res.json({ counter: val });
+});
+
+app.post("/api/counter", (req, res) => {
+  const { value } = req.body;
+  if (value == null || !Number.isInteger(value) || value < 1) {
+    return res.status(400).json({ error: "Value must be a positive integer" });
+  }
+  fs.writeFileSync(counterFile, String(value));
+  res.json({ counter: value });
+});
+
 app.get("/api/stream", (req, res) => {
   res.writeHead(200, {
     "Content-Type": "text/event-stream",

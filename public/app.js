@@ -4,6 +4,9 @@ const runTestsBtn = document.getElementById("run-tests-btn");
 const addCamerasBtn = document.getElementById("add-cameras-btn");
 const removeCamerasBtn = document.getElementById("remove-cameras-btn");
 const cameraCount = document.getElementById("camera-count");
+const resetCounterBtn = document.getElementById("reset-counter-btn");
+const resetValue = document.getElementById("reset-value");
+const counterDisplay = document.getElementById("counter-display");
 const output = document.getElementById("output");
 const clearOutputBtn = document.getElementById("clear-output-btn");
 const statusDot = document.getElementById("status-dot");
@@ -45,6 +48,39 @@ async function loadTests() {
 }
 
 loadTests();
+
+async function loadCounter() {
+  try {
+    const res = await fetch("/api/counter");
+    const data = await res.json();
+    counterDisplay.textContent = data.counter;
+  } catch {
+    counterDisplay.textContent = "?";
+  }
+}
+
+loadCounter();
+
+resetCounterBtn.addEventListener("click", async () => {
+  const value = parseInt(resetValue.value);
+  if (value < 1) return;
+  try {
+    const res = await fetch("/api/counter", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ value }),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      appendOutput(`Error resetting counter: ${err.error}\n`, "stderr");
+      return;
+    }
+    counterDisplay.textContent = value;
+    appendOutput(`Counter reset to ${value}\n`, "system");
+  } catch (err) {
+    appendOutput(`Error resetting counter: ${err.message}\n`, "stderr");
+  }
+});
 
 function appendOutput(text, className = "stdout") {
   const placeholder = output.querySelector(".output-placeholder");

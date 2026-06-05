@@ -80,7 +80,25 @@ def create_camera(name: str, ip: str, port: int, stream_num: int) -> dict:
 def main():
     parser = argparse.ArgumentParser(description="Bulk-add cameras to Equature Aware")
     parser.add_argument("count", nargs="?", type=int, help="Number of cameras to add")
+    parser.add_argument(
+        "--reset", "-r", type=int, metavar="N", help="Reset the stream counter to N"
+    )
+    parser.add_argument(
+        "--show",
+        "-s",
+        action="store_true",
+        help="Show the current counter value and exit",
+    )
     args = parser.parse_args()
+
+    if args.show:
+        print(read_counter())
+        return
+
+    if args.reset is not None:
+        write_counter(args.reset)
+        print(f"Counter reset to {args.reset}")
+        return
 
     env = load_env()
     ip = env.get("rtsp_ip", "192.168.5.93")
