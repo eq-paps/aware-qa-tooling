@@ -43,7 +43,9 @@ test('add-camera', async ({ page }) => {
   await page.getByRole('textbox', { name: 'rtsp://<ip-address>:<port>/<' }).click();
   await page.getByRole('textbox', { name: 'rtsp://<ip-address>:<port>/<' }).fill('rtsp://localhost:8554/rtsp-test_stream5');
   await page.getByRole('textbox', { name: 'http://<ip-address>/<url>/<' }).click();
-  await page.getByRole('textbox', { name: 'http://<ip-address>/<url>/<' }).fill('http://localhost:3456/api/files/snapshot/CityBusline.mp4');
+  const ip = process.env.rtsp_ip || '192.168.5.93';
+  const snapPort = process.env.snapshot_port || '3456';
+  await page.getByRole('textbox', { name: 'http://<ip-address>/<url>/<' }).fill(`http://${ip}:${snapPort}/api/files/snapshot/CityBusline.mp4`);
   await page.getByRole('button', { name: 'Add', exact: true }).click();
 
 

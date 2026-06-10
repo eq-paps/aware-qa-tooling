@@ -53,7 +53,9 @@ def generate_name() -> str:
     return f"LT-{uuid.uuid4().hex[:12].upper()}"
 
 
-def create_camera(name: str, ip: str, port: int, stream_num: int) -> dict:
+def create_camera(
+    name: str, ip: str, port: int, stream_num: int, snapshot_url: str
+) -> dict:
     rtsp_url = f"rtsp://{ip}:{port}/test-stream-{stream_num}"
     payload = json.dumps(
         {
@@ -62,7 +64,7 @@ def create_camera(name: str, ip: str, port: int, stream_num: int) -> dict:
             "username": "a",
             "password": "1",
             "rtspUrl": rtsp_url,
-            "snapshotUrl": "http://localhost:3456/api/files/snapshot/CityBusline.mp4",
+            "snapshotUrl": snapshot_url,
             "ipAddress": ip,
         }
     ).encode()
@@ -103,6 +105,8 @@ def main():
     env = load_env()
     ip = env.get("rtsp_ip", "192.168.5.93")
     port = int(env.get("rtsp_port", "8554"))
+    snapshot_port = env.get("snapshot_port", "3456")
+    snapshot_url = f"http://{ip}:{snapshot_port}/api/files/snapshot/CityBusline.mp4"
 
     print("=== Equature Aware Camera Bulk-Add Tool ===")
     print(f"RTSP IP: {ip}:{port}")
@@ -133,7 +137,7 @@ def main():
         current_stream = stream_num + i
         name = generate_name()
         try:
-            cam = create_camera(name, ip, port, current_stream)
+            cam = create_camera(name, ip, port, current_stream, snapshot_url)
             print(
                 f"  Created {cam['name']}  (id: {cam['camera_id']})  →  test-stream-{current_stream}"
             )
