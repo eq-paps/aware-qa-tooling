@@ -145,9 +145,12 @@ def main():
             success += 1
         except urllib.error.HTTPError as e:
             body = e.read().decode()
-            print(f"  Failed camera creation: HTTP {e.code} - {body[:500]}")
+            print(f"  Failed camera creation: HTTP {e.code}")
+            print(f"    URL: {f'{BASE_URL}/create'}")
+            print(f"    Response headers: {dict(e.headers)}")
+            print(f"    Body: {body[:500] or '(empty)'}")
             sys.stdout.flush()
-            failed.append(body[:500])
+            failed.append(body[:500] if body else "(empty)")
         except Exception as e:
             print(f"  Failed camera creation: {e}")
             sys.stdout.flush()
